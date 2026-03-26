@@ -7,7 +7,7 @@
     <!-- Google Fonts + Font Awesome 6 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
@@ -17,8 +17,8 @@
 <header>
     <div class="glass-nav">
         <div class="logo">
-            <h1>RUANA C.A.</h1>
-            <span>Consultores integrales</span>
+            <h1>RUANA <span>C.A.</span></h1>
+            <span class="tagline">Consultores integrales</span>
         </div>
         <div class="nav-links">
             <a href="#home">Inicio</a>
@@ -28,7 +28,10 @@
             <a href="#eventos">Eventos</a>
             <a href="#aula">Aula Virtual</a>
             <a href="#contacto">Contacto</a>
-            <a href="#contacto" class="btn-outline-glass">+58 412 6605468</a>
+            <a href="#contacto" class="btn-outline-glass"><i class="fas fa-phone-alt"></i> +58 412 6605468</a>
+        </div>
+        <div class="menu-toggle">
+            <i class="fas fa-bars"></i>
         </div>
     </div>
 </header>
@@ -37,48 +40,55 @@
     <!-- HERO section -->
     <section id="home" class="hero">
         <div class="container">
-            <div class="glass-card hero-card">
-                <h2>Gestión de riesgos al más alto nivel</h2>
+            <div class="hero-card glass-card">
+                <div class="hero-badge">+30 años de experiencia</div>
+                <h2>Gestión de riesgos <span class="gradient-text">al más alto nivel</span></h2>
                 <p>Experiencia e innovación para proteger su empresa, trabajadores y productividad.</p>
-                <a href="#services" class="btn-primary">Explorar soluciones <i class="fas fa-arrow-right"></i></a>
+                <div class="hero-buttons">
+                    <a href="#services" class="btn-primary">Explorar soluciones <i class="fas fa-arrow-right"></i></a>
+                    <a href="#contacto" class="btn-secondary">Contactar ahora</a>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- QUIENES SOMOS (Misión, Visión, Políticas) -->
+    <!-- QUIENES SOMOS -->
     <section id="about">
         <div class="container">
-            <h2 class="section-title">Quiénes Somos</h2>
-            <div class="grid-2" style="margin-bottom: 2.5rem;">
-                <div class="glass-card info-card">
-                    <i class="fas fa-bullseye"></i>
+            <div class="section-header">
+                <span class="section-subtitle">Conócenos</span>
+                <h2 class="section-title">Quiénes Somos</h2>
+            </div>
+            <div class="about-grid">
+                <div class="glass-card mission-card">
+                    <div class="card-icon"><i class="fas fa-bullseye"></i></div>
                     <h3>Misión</h3>
                     <p>Ofrecer soluciones integrales de gestión de riesgos y seguridad para empresas de los sectores petrolero, gas y petroquímica. Proteger trabajadores, activos, productividad e imagen mediante las mejores prácticas y tecnología de punta.</p>
                 </div>
-                <div class="glass-card info-card">
-                    <i class="fas fa-chart-line"></i>
+                <div class="glass-card vision-card">
+                    <div class="card-icon"><i class="fas fa-chart-line"></i></div>
                     <h3>Visión</h3>
                     <p>En los próximos 8 años ser referente en consultoría de riesgos y seguridad industrial en América Latina, reconocidos por pertinencia técnica, económica, integridad y compromiso.</p>
                 </div>
             </div>
-            <div class="grid-3">
-                <div class="glass-card info-card">
-                    <i class="fas fa-certificate"></i>
+            <div class="policies-grid">
+                <div class="glass-card policy-card">
+                    <div class="card-icon"><i class="fas fa-certificate"></i></div>
                     <h3>Política de Calidad</h3>
                     <p>Compromiso con ISO 9001. Pertinencia técnica y económica, adaptaciones oportunas, cumplimiento regulatorio y rigurosos controles para construir confianza.</p>
                 </div>
-                <div class="glass-card info-card">
-                    <i class="fas fa-heartbeat"></i>
+                <div class="glass-card policy-card">
+                    <div class="card-icon"><i class="fas fa-heartbeat"></i></div>
                     <h3>Seguridad y Salud Laboral</h3>
-                    <p>La vida, bienestar físico y salud emocional de nuestro equipo es un valor. Ejemplo en promoción de seguridad, mejora continua y participación activa.</p>
+                    <p>La vida, bienestar físico y salud emocional de nuestro equipo es un valor. Ejemplo en promoción de seguridad, mejora continua.</p>
                 </div>
-                <div class="glass-card info-card">
-                    <i class="fas fa-leaf"></i>
+                <div class="glass-card policy-card">
+                    <div class="card-icon"><i class="fas fa-leaf"></i></div>
                     <h3>Protección Ambiental</h3>
                     <p>Prevención de contaminación, lucha contra cambio climático, mejora del desempeño ambiental. Soluciones coherentes con nuestra política ecológica.</p>
                 </div>
             </div>
-            <div class="glass-card info-card text-center mt-2" style="margin-top: 2rem;">
+            <div class="glass-card highlight-card">
                 <i class="fas fa-handshake"></i>
                 <h3>Más que una consultoría, un socio estratégico</h3>
                 <p>Más de 30 años de experiencia en seguridad industrial, gestión de emergencias y formación.</p>
@@ -89,96 +99,109 @@
     <!-- LÍNEAS DE SERVICIO -->
     <section id="services">
         <div class="container">
-            <h2 class="section-title">Nuestras líneas de servicio</h2>
-            <div class="grid-3">
+            <div class="section-header">
+                <span class="section-subtitle">Nuestra expertise</span>
+                <h2 class="section-title">Líneas de Servicio</h2>
+            </div>
+            <div class="services-grid">
                 <div class="service-card glass-card">
-                    <i class="fas fa-hard-hat"></i>
+                    <div class="service-icon"><i class="fas fa-hard-hat"></i></div>
                     <h3>Seguridad Industrial</h3>
-                    <p>Estudios de riesgo, implementación de PSM, control de riesgos físicos, químicos, biológicos. Sistemas de gestión ISO 45000, ISO 31000 y seguridad vial.</p>
+                    <p>Estudios de riesgo, implementación de PSM, control de riesgos físicos, químicos, biológicos. Sistemas de gestión ISO 45000, ISO 31000.</p>
                 </div>
                 <div class="service-card glass-card">
-                    <i class="fas fa-fire-extinguisher"></i>
+                    <div class="service-icon"><i class="fas fa-fire-extinguisher"></i></div>
                     <h3>Gestión de Emergencias</h3>
-                    <p>Planes de emergencia, organización de brigadas, mantenimiento de vehículos de bomberos, estudios de vulnerabilidad y sistemas de protección.</p>
+                    <p>Planes de emergencia, organización de brigadas, mantenimiento de vehículos de bomberos, estudios de vulnerabilidad.</p>
                 </div>
                 <div class="service-card glass-card">
-                    <i class="fas fa-water"></i>
+                    <div class="service-icon"><i class="fas fa-water"></i></div>
                     <h3>Seguridad Acuática</h3>
-                    <p>Evaluación de instalaciones flotantes, inspecciones pre-aseguradoras, gestión portuaria, investigación de siniestros marítimos y legislación acuática.</p>
+                    <p>Evaluación de instalaciones flotantes, inspecciones pre-aseguradoras, gestión portuaria, investigación de siniestros marítimos.</p>
                 </div>
                 <div class="service-card glass-card">
-                    <i class="fas fa-chalkboard-user"></i>
+                    <div class="service-icon"><i class="fas fa-chalkboard-user"></i></div>
                     <h3>Entrenamiento & Certificación</h3>
-                    <p>Capacitación SIHO, espacios confinados, H₂S, conducción segura. Modalidades presencial, e-learning y mixta. Facilitadores expertos.</p>
+                    <p>Capacitación SIHO, espacios confinados, H₂S, conducción segura. Modalidades presencial, e-learning y mixta.</p>
                 </div>
                 <div class="service-card glass-card">
-                    <i class="fas fa-truck-fast"></i>
+                    <div class="service-icon"><i class="fas fa-truck-fast"></i></div>
                     <h3>Suministro Técnico</h3>
-                    <p>Equipos de bomberos, EPP, sistemas fijos de extinción, espuma contra incendios, rescate y material peligroso. Soporte post-venta.</p>
+                    <p>Equipos de bomberos, EPP, sistemas fijos de extinción, espuma contra incendios, rescate y material peligroso.</p>
                 </div>
                 <div class="service-card glass-card">
-                    <i class="fas fa-laptop-code"></i>
+                    <div class="service-icon"><i class="fas fa-laptop-code"></i></div>
                     <h3>Desarrollo de Software</h3>
-                    <p>Digitalización de procesos preventivos, sistemas modulares y escalables, integración web, diseños amigables. Tecnología a medida para su empresa.</p>
+                    <p>Digitalización de procesos preventivos, sistemas modulares y escalables, integración web, diseños amigables.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CERTIFICACIONES (dinámico) -->
+    <!-- CERTIFICACIONES -->
     <section id="certificaciones">
         <div class="container">
-            <h2 class="section-title">📁 Certificaciones emitidas</h2>
-            <p class="mb-4">Registro público de certificados y cursos impartidos por RUANA C.A.</p>
-            <div id="certGrid" class="grid-3">
-                <!-- JS llena dinámicamente -->
+            <div class="section-header">
+                <span class="section-subtitle">Respaldo oficial</span>
+                <h2 class="section-title">Certificaciones emitidas</h2>
+            </div>
+            <p class="section-description">Registro público de certificados y cursos impartidos por RUANA C.A.</p>
+            <div id="certGrid" class="cert-grid">
                 <div class="text-center">Cargando certificaciones...</div>
             </div>
         </div>
     </section>
 
-    <!-- EVENTOS Y PROGRAMACIÓN -->
+    <!-- EVENTOS -->
     <section id="eventos">
         <div class="container">
-            <h2 class="section-title">Eventos y Programación</h2>
-            <div class="grid-3" id="eventosGrid">
+            <div class="section-header">
+                <span class="section-subtitle">Agenda profesional</span>
+                <h2 class="section-title">Eventos y Programación</h2>
+            </div>
+            <div class="events-grid" id="eventosGrid">
                 <div class="text-center">Cargando eventos...</div>
             </div>
         </div>
     </section>
 
-    <!-- AULA VIRTUAL (Kajabi) -->
+    <!-- AULA VIRTUAL -->
     <section id="aula">
         <div class="container">
             <div class="aula-box glass-card">
-                <i class="fas fa-chalkboard"></i>
+                <div class="aula-icon">
+                    <i class="fas fa-chalkboard-user"></i>
+                </div>
                 <h2>Aula Virtual</h2>
                 <p>Acceda a nuestra plataforma de formación en línea. Cursos, certificaciones, gestión de aprendizaje y más.</p>
                 <a href="https://kajabi.com/" target="_blank" class="btn-kajabi"><i class="fas fa-external-link-alt"></i> Ingresar a Kajabi · RUANA Virtual</a>
-                <p class="mt-2">Plataforma integrada para cursos online, pagos y seguimiento académico.</p>
+                <p class="aula-note">Plataforma integrada para cursos online, pagos y seguimiento académico.</p>
             </div>
         </div>
     </section>
 
-    <!-- CONTACTO + RRSS -->
+    <!-- CONTACTO -->
     <section id="contacto">
         <div class="container">
-            <h2 class="section-title">Contacto & Redes</h2>
-            <div class="contact-grid">
-                <div class="glass-card contact-info">
-                    <i class="fas fa-phone-alt"></i>
+            <div class="section-header">
+                <span class="section-subtitle">Conecta con nosotros</span>
+                <h2 class="section-title">Contacto & Redes</h2>
+            </div>
+            <div class="contact-wrapper">
+                <div class="glass-card contact-card">
+                    <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
                     <h3>Teléfono</h3>
-                    <p>+58 412 6605468</p>
-                    <i class="fas fa-envelope"></i>
+                    <p><a href="tel:+584126605468">+58 412 6605468</a></p>
+                    <div class="contact-icon"><i class="fas fa-envelope"></i></div>
                     <h3>Email</h3>
-                    <p>ruanaconsultores@gmail.com</p>
-                    <i class="fas fa-map-marker-alt"></i>
+                    <p><a href="mailto:ruanaconsultores@gmail.com">ruanaconsultores@gmail.com</a></p>
+                    <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
                     <h3>Oficina</h3>
                     <p>Punto Fijo, Venezuela</p>
                 </div>
-                <div class="glass-card contact-info">
-                    <i class="fas fa-share-alt"></i>
-                    <h3>Conéctate con RUANA</h3>
+                <div class="glass-card social-card">
+                    <div class="contact-icon"><i class="fas fa-share-alt"></i></div>
+                    <h3>Síguenos</h3>
                     <div class="social-icons">
                         <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
                         <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
@@ -187,7 +210,7 @@
                         <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
                     </div>
                     <p>Síguenos para conocer novedades, cursos y artículos técnicos. Juntos protegemos la tranquilidad de su empresa.</p>
-                    <div class="badge">#Protección+Producción</div>
+                    <div class="hashtag">#Protección+Producción</div>
                 </div>
             </div>
         </div>
@@ -195,8 +218,10 @@
 </main>
 
 <footer>
-    <p>© 2025 RUANA C.A. Consultores Integrales — Gestión de Riesgos al más alto nivel.</p>
-    <p>Comprometidos con la seguridad, el ambiente y la excelencia.</p>
+    <div class="container">
+        <p>© 2025 RUANA C.A. Consultores Integrales — Gestión de Riesgos al más alto nivel.</p>
+        <p>Comprometidos con la seguridad, el ambiente y la excelencia.</p>
+    </div>
 </footer>
 
 <script src="js/main.js"></script>

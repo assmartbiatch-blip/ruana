@@ -1,4 +1,38 @@
-// Certificaciones con los datos del brochure
+// Datos de servicios para el acordeón
+const serviciosAcordeon = [
+    {
+        icono: "fas fa-hard-hat",
+        titulo: "Seguridad Industrial",
+        descripcion: "Estudios de riesgo, implementación de PSM, control de riesgos físicos, químicos, biológicos. Sistemas de gestión ISO 45000, ISO 31000 y seguridad vial. Más de 30 años de experiencia protegiendo activos industriales."
+    },
+    {
+        icono: "fas fa-fire-extinguisher",
+        titulo: "Gestión de Emergencias",
+        descripcion: "Planes de emergencia, organización de brigadas industriales y comunitarias, mantenimiento de vehículos de bomberos, estudios de vulnerabilidad, diseño de sistemas de protección contra incendios."
+    },
+    {
+        icono: "fas fa-water",
+        titulo: "Seguridad Acuática",
+        descripcion: "Evaluación de instalaciones flotantes, inspecciones pre-aseguradoras, gestión portuaria (SISEINOP, PBIP), investigación de siniestros marítimos y legislación acuática especializada."
+    },
+    {
+        icono: "fas fa-chalkboard-user",
+        titulo: "Entrenamiento & Certificación",
+        descripcion: "Capacitación SIHO, espacios confinados, H₂S, conducción segura. Modalidades presencial, e-learning y mixta. Certificación de competencias y formación continua."
+    },
+    {
+        icono: "fas fa-truck-fast",
+        titulo: "Suministro Técnico",
+        descripcion: "Equipos de bomberos, EPP, sistemas fijos de extinción, espuma contra incendios, rescate y material peligroso. Asistencia técnica post-venta y control de calidad."
+    },
+    {
+        icono: "fas fa-laptop-code",
+        titulo: "Desarrollo de Software",
+        descripcion: "Digitalización de procesos preventivos, sistemas modulares y escalables, integración web con tecnología de punta. Diseños atractivos y amigables para gestión de riesgos."
+    }
+];
+
+// Certificaciones
 const certificados = [
     {
         titulo: "Curso Evaluación de Atmósferas Peligrosas",
@@ -29,42 +63,43 @@ const certificados = [
         fecha: "Enero 2025",
         lugar: "Caracas",
         link: "#"
-    },
-    {
-        titulo: "Gestión de Emergencias en Unidades Flotantes",
-        fecha: "Marzo 2025",
-        lugar: "Punto Fijo",
-        link: "#"
     }
 ];
 
-// Eventos actualizados
+// Eventos con WhatsApp
 const eventos = [
     {
         titulo: "Taller: Gestión de Emergencias y Brigadas",
         fecha: "20 Abril 2025",
         modalidad: "Presencial (Punto Fijo)",
-        descrip: "Entrenamiento en respuesta inicial, uso de extintores y coordinación de brigadas industriales."
+        descrip: "Entrenamiento en respuesta inicial, uso de extintores y coordinación de brigadas industriales.",
+        whatsappMsg: "Hola RUANA C.A., estoy interesado/a en el Taller de Gestión de Emergencias y Brigadas del 20 Abril 2025. Quisiera más información."
     },
     {
         titulo: "Curso Online: Seguridad Vial para Flotas",
         fecha: "5-7 Mayo 2025",
         modalidad: "E-Learning",
-        descrip: "Prevención de accidentes, ISO 39000, conducción defensiva y gestión de flotas."
+        descrip: "Prevención de accidentes, ISO 39000, conducción defensiva y gestión de flotas.",
+        whatsappMsg: "Hola RUANA C.A., me interesa el Curso Online de Seguridad Vial para Flotas del 5-7 Mayo 2025. Por favor, envíenme información."
     },
     {
         titulo: "Seminario: Actualización en Seguridad de Procesos",
         fecha: "15 Junio 2025",
         modalidad: "Aula mixta",
-        descrip: "Dirigido a ingenieros y supervisores. Gestión de riesgos operacionales y PSM."
+        descrip: "Dirigido a ingenieros y supervisores. Gestión de riesgos operacionales y PSM.",
+        whatsappMsg: "Hola RUANA C.A., quisiera inscribirme en el Seminario de Seguridad de Procesos del 15 Junio 2025. Necesito detalles."
     },
     {
         titulo: "Curso de Espacios Confinados",
         fecha: "10-12 Julio 2025",
         modalidad: "Presencial",
-        descrip: "Certificación en entrada a espacios confinados, rescate y monitoreo de atmósferas."
+        descrip: "Certificación en entrada a espacios confinados, rescate y monitoreo de atmósferas.",
+        whatsappMsg: "Hola RUANA C.A., estoy interesado/a en el Curso de Espacios Confinados del 10-12 Julio 2025. Gracias."
     }
 ];
+
+// Número de WhatsApp (formato internacional sin +)
+const whatsappNumber = "584126605468";
 
 function escapeHtml(str) {
     if (!str) return '';
@@ -76,6 +111,53 @@ function escapeHtml(str) {
     });
 }
 
+// Renderizar acordeón de servicios
+function renderAccordion() {
+    const container = document.getElementById('accordionServices');
+    if (!container) return;
+
+    let html = '';
+    serviciosAcordeon.forEach((servicio, index) => {
+        html += `
+            <div class="accordion-item" data-index="${index}">
+                <div class="accordion-header">
+                    <div class="accordion-icon">
+                        <i class="${servicio.icono}"></i>
+                    </div>
+                    <h3>${escapeHtml(servicio.titulo)}</h3>
+                    <div class="accordion-arrow">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="accordion-content">
+                    <p>${escapeHtml(servicio.descripcion)}</p>
+                </div>
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+
+    // Inicializar acordeón
+    document.querySelectorAll('.accordion-item').forEach(item => {
+        const header = item.querySelector('.accordion-header');
+        header.addEventListener('click', () => {
+            const isActive = item.classList.contains('active');
+            // Cerrar todos
+            document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('active'));
+            // Abrir el actual si no estaba activo
+            if (!isActive) {
+                item.classList.add('active');
+            }
+        });
+    });
+
+    // Abrir el primer item por defecto
+    if (document.querySelector('.accordion-item')) {
+        document.querySelector('.accordion-item').classList.add('active');
+    }
+}
+
+// Renderizar certificaciones
 function renderCertificaciones() {
     const container = document.getElementById('certGrid');
     if (!container) return;
@@ -100,6 +182,7 @@ function renderCertificaciones() {
     container.innerHTML = html;
 }
 
+// Renderizar eventos con botón de WhatsApp
 function renderEventos() {
     const container = document.getElementById('eventosGrid');
     if (!container) return;
@@ -111,13 +194,16 @@ function renderEventos() {
 
     let html = '';
     eventos.forEach(ev => {
+        const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(ev.whatsappMsg)}`;
         html += `
             <div class="event-card glass-card">
                 <i class="fas fa-calendar-star"></i>
                 <h3>${escapeHtml(ev.titulo)}</h3>
                 <p><strong>${escapeHtml(ev.fecha)}</strong> · ${escapeHtml(ev.modalidad)}</p>
                 <p>${escapeHtml(ev.descrip)}</p>
-                <div class="badge" style="margin-top: 0.8rem; background: linear-gradient(135deg, #E6B422, #C49A1A);">Inscripción abierta</div>
+                <a href="${whatsappLink}" target="_blank" class="btn-whatsapp-event">
+                    <i class="fab fa-whatsapp"></i> Inscribirme por WhatsApp
+                </a>
             </div>
         `;
     });
@@ -134,7 +220,6 @@ function initSmoothScroll() {
                 const target = document.querySelector(hash);
                 if (target) {
                     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    // Cerrar menú móvil si está abierto
                     const navLinks = document.querySelector('.nav-links');
                     if (navLinks && navLinks.classList.contains('active')) {
                         navLinks.classList.remove('active');
@@ -163,18 +248,18 @@ function initHeaderEffect() {
 
     window.addEventListener('scroll', () => {
         if (window.scrollY > 20) {
-            header.style.background = 'rgba(255, 255, 255, 0.95)';
+            header.style.background = 'rgba(255, 255, 255, 0.96)';
             header.style.backdropFilter = 'blur(24px)';
         } else {
-            header.style.background = 'rgba(255, 255, 255, 0.85)';
+            header.style.background = 'rgba(255, 255, 255, 0.9)';
             header.style.backdropFilter = 'blur(24px)';
         }
     });
 }
 
-// Intersection Observer para animaciones
+// Scroll animations
 function initScrollAnimations() {
-    const cards = document.querySelectorAll('.glass-card, .service-card, .cert-card, .event-card');
+    const cards = document.querySelectorAll('.glass-card, .cert-card, .event-card, .accordion-item');
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -195,6 +280,7 @@ function initScrollAnimations() {
 
 // Inicialización
 document.addEventListener('DOMContentLoaded', () => {
+    renderAccordion();
     renderCertificaciones();
     renderEventos();
     initSmoothScroll();
