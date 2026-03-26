@@ -96,17 +96,21 @@
         </div>
     </section>
 
-    <!-- LÍNEAS DE SERVICIO - ACORDEÓN DINÁMICO -->
+    <!-- LÍNEAS DE SERVICIO - CARRUSEL DINÁMICO -->
     <section id="services">
         <div class="container">
             <div class="section-header">
                 <span class="section-subtitle">Nuestra expertise</span>
                 <h2 class="section-title">Líneas de Servicio</h2>
             </div>
-            <div class="accordion-container" id="accordionServices">
-                <!-- JS llena el acordeón -->
-                <div class="text-center">Cargando servicios...</div>
+            <div class="carousel-wrap">
+                <button class="carousel-btn prev" aria-label="Anterior servicio"><i class="fas fa-chevron-left"></i></button>
+                <div class="services-carousel" id="servicesCarousel">
+                    <div class="text-center">Cargando servicios…</div>
+                </div>
+                <button class="carousel-btn next" aria-label="Siguiente servicio"><i class="fas fa-chevron-right"></i></button>
             </div>
+            <div class="carousel-dots" id="servicesDots" aria-label="Páginas de servicios"></div>
         </div>
     </section>
 

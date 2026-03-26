@@ -111,50 +111,125 @@ function escapeHtml(str) {
     });
 }
 
-// Renderizar acordeón de servicios
-function renderAccordion() {
-    const container = document.getElementById('accordionServices');
-    if (!container) return;
+// Renderizar carrusel de servicios
+function renderServiceCarousel() {
+    const container = document.getElementById('servicesCarousel');
+    const dotsContainer = document.getElementById('servicesDots');
+    const btnPrev = document.querySelector('.carousel-btn.prev');
+    const btnNext = document.querySelector('.carousel-btn.next');
 
-    let html = '';
+    if (!container || !dotsContainer || !btnPrev || !btnNext) return;
+
+    container.innerHTML = '';
+    dotsContainer.innerHTML = '';
+
     serviciosAcordeon.forEach((servicio, index) => {
-        html += `
-            <div class="accordion-item" data-index="${index}">
-                <div class="accordion-header">
-                    <div class="accordion-icon">
-                        <i class="${servicio.icono}"></i>
-                    </div>
-                    <h3>${escapeHtml(servicio.titulo)}</h3>
-                    <div class="accordion-arrow">
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                </div>
-                <div class="accordion-content">
-                    <p>${escapeHtml(servicio.descripcion)}</p>
-                </div>
-            </div>
+        const item = document.createElement('article');
+        item.className = 'service-card glass-card';
+        item.innerHTML = `
+            <div class="service-icon"><i class="${servicio.icono}"></i></div>
+            <h3>${escapeHtml(servicio.titulo)}</h3>
+            <p>${escapeHtml(servicio.descripcion)}</p>
         `;
-    });
-    container.innerHTML = html;
+        container.appendChild(item);
 
-    // Inicializar acordeón
-    document.querySelectorAll('.accordion-item').forEach(item => {
-        const header = item.querySelector('.accordion-header');
-        header.addEventListener('click', () => {
-            const isActive = item.classList.contains('active');
-            // Cerrar todos
-            document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('active'));
-            // Abrir el actual si no estaba activo
-            if (!isActive) {
-                item.classList.add('active');
-            }
+        const dot = document.createElement('span');
+        dot.className = 'carousel-dot';
+        dot.setAttribute('data-index', index);
+        dot.addEventListener('click', () => scrollToSlide(index));
+        dotsContainer.appendChild(dot);
+    });
+
+    const slides = container.querySelectorAll('.service-card');
+    let activeIndex = 0;
+
+    function updateDots() {
+        dotsContainer.querySelectorAll('.carousel-dot').forEach((dot, dotIndex) => {
+            dot.classList.toggle('active', dotIndex === activeIndex);
         });
+    }
+
+    function updateButtons() {
+        btnPrev.disabled = activeIndex === 0;
+        btnNext.disabled = activeIndex === slides.length - 1;
+    }
+
+    function scrollToSlide(index) {
+        if (index < 0 || index >= slides.length) return;
+        activeIndex = index;
+        slides[activeIndex].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        updateDots();
+        updateButtons();
+    }
+
+    function startAutoplay() {
+        stopAutoplay();
+        autoplayInterval = setInterval(() => {
+            const nextIndex = activeIndex === slides.length - 1 ? 0 : activeIndex + 1;
+            scrollToSlide(nextIndex);
+        }, 3800);
+    }
+
+    function stopAutoplay() {
+        if (autoplayInterval) {
+            clearInterval(autoplayInterval);
+            autoplayInterval = null;
+        }
+    }
+
+    btnPrev.addEventListener('click', () => scrollToSlide(Math.max(0, activeIndex - 1)));
+    btnNext.addEventListener('click', () => scrollToSlide(Math.min(slides.length - 1, activeIndex + 1)));
+
+    container.addEventListener('mouseenter', stopAutoplay);
+    container.addEventListener('mouseleave', startAutoplay);
+    btnPrev.addEventListener('mouseenter', stopAutoplay);
+    btnNext.addEventListener('mouseenter', stopAutoplay);
+
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    container.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        stopAutoplay();
     });
 
-    // Abrir el primer item por defecto
-    if (document.querySelector('.accordion-item')) {
-        document.querySelector('.accordion-item').classList.add('active');
-    }
+    container.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        const diff = touchStartX - touchEndX;
+
+        if (Math.abs(diff) > 40) {
+            if (diff > 0) {
+                scrollToSlide(Math.min(slides.length - 1, activeIndex + 1));
+            } else {
+                scrollToSlide(Math.max(0, activeIndex - 1));
+            }
+        }
+
+        startAutoplay();
+    });
+
+    container.addEventListener('scroll', () => {
+        const carouselBox = container.getBoundingClientRect();
+        const centerX = carouselBox.left + carouselBox.width / 2;
+
+        const nearest = Array.from(slides).reduce((closest, slide, idx) => {
+            const rect = slide.getBoundingClientRect();
+            const delta = Math.abs((rect.left + rect.width / 2) - centerX);
+            return delta < closest.delta ? {idx, delta} : closest;
+        }, {idx: 0, delta: Infinity});
+
+        if (nearest.idx !== activeIndex) {
+            activeIndex = nearest.idx;
+            updateDots();
+            updateButtons();
+        }
+    });
+
+    container.addEventListener('focusin', stopAutoplay);
+    container.addEventListener('focusout', startAutoplay);
+
+    scrollToSlide(0);
+    startAutoplay();
 }
 
 // Renderizar certificaciones
@@ -280,7 +355,7 @@ function initScrollAnimations() {
 
 // Inicialización
 document.addEventListener('DOMContentLoaded', () => {
-    renderAccordion();
+    renderServiceCarousel();
     renderCertificaciones();
     renderEventos();
     initSmoothScroll();
