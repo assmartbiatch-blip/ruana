@@ -1,4 +1,4 @@
-// Certificaciones (datos estáticos, fácil de editar)
+// Certificaciones con los datos del brochure
 const certificados = [
     {
         titulo: "Curso Evaluación de Atmósferas Peligrosas",
@@ -25,36 +25,47 @@ const certificados = [
         link: "#"
     },
     {
-        titulo: "Higiene Ocupacional: muestreo y control",
+        titulo: "Higiene Ocupacional: Muestreo y Control",
         fecha: "Enero 2025",
         lugar: "Caracas",
+        link: "#"
+    },
+    {
+        titulo: "Gestión de Emergencias en Unidades Flotantes",
+        fecha: "Marzo 2025",
+        lugar: "Punto Fijo",
         link: "#"
     }
 ];
 
-// Eventos (programación)
+// Eventos actualizados
 const eventos = [
     {
         titulo: "Taller: Gestión de Emergencias y Brigadas",
         fecha: "20 Abril 2025",
         modalidad: "Presencial (Punto Fijo)",
-        descrip: "Entrenamiento en respuesta inicial, uso de extintores y coordinación."
+        descrip: "Entrenamiento en respuesta inicial, uso de extintores y coordinación de brigadas industriales."
     },
     {
         titulo: "Curso Online: Seguridad Vial para Flotas",
         fecha: "5-7 Mayo 2025",
         modalidad: "E-Learning",
-        descrip: "Prevención de accidentes, ISO 39000, conducción defensiva."
+        descrip: "Prevención de accidentes, ISO 39000, conducción defensiva y gestión de flotas."
     },
     {
         titulo: "Seminario: Actualización en Seguridad de Procesos",
         fecha: "15 Junio 2025",
         modalidad: "Aula mixta",
-        descrip: "Dirigido a ingenieros y supervisores. Gestión de riesgos operacionales."
+        descrip: "Dirigido a ingenieros y supervisores. Gestión de riesgos operacionales y PSM."
+    },
+    {
+        titulo: "Curso de Espacios Confinados",
+        fecha: "10-12 Julio 2025",
+        modalidad: "Presencial",
+        descrip: "Certificación en entrada a espacios confinados, rescate y monitoreo de atmósferas."
     }
 ];
 
-// Función para escapar HTML (seguridad)
 function escapeHtml(str) {
     if (!str) return '';
     return str.replace(/[&<>]/g, function(m) {
@@ -65,7 +76,6 @@ function escapeHtml(str) {
     });
 }
 
-// Renderizar certificaciones
 function renderCertificaciones() {
     const container = document.getElementById('certGrid');
     if (!container) return;
@@ -83,14 +93,13 @@ function renderCertificaciones() {
                 <h3>${escapeHtml(cert.titulo)}</h3>
                 <p><i class="far fa-calendar-alt"></i> ${escapeHtml(cert.fecha)}</p>
                 <p><i class="fas fa-location-dot"></i> ${escapeHtml(cert.lugar)}</p>
-                <a href="${cert.link}" target="_blank" class="cert-link">Ver certificado <i class="fas fa-external-link-alt"></i></a>
+                <a href="${cert.link}" target="_blank" class="cert-link">Ver certificado <i class="fas fa-arrow-right"></i></a>
             </div>
         `;
     });
     container.innerHTML = html;
 }
 
-// Renderizar eventos
 function renderEventos() {
     const container = document.getElementById('eventosGrid');
     if (!container) return;
@@ -104,20 +113,20 @@ function renderEventos() {
     eventos.forEach(ev => {
         html += `
             <div class="event-card glass-card">
-                <i class="fas fa-calendar-week" style="font-size: 1.8rem; color:#0A2F6C;"></i>
+                <i class="fas fa-calendar-star"></i>
                 <h3>${escapeHtml(ev.titulo)}</h3>
                 <p><strong>${escapeHtml(ev.fecha)}</strong> · ${escapeHtml(ev.modalidad)}</p>
                 <p>${escapeHtml(ev.descrip)}</p>
-                <div class="badge" style="margin-top: 0.8rem;">Inscripción abierta</div>
+                <div class="badge" style="margin-top: 0.8rem; background: linear-gradient(135deg, #E6B422, #C49A1A);">Inscripción abierta</div>
             </div>
         `;
     });
     container.innerHTML = html;
 }
 
-// Smooth scroll para enlaces internos
+// Smooth scroll
 function initSmoothScroll() {
-    document.querySelectorAll('.nav-links a, .btn-primary, .btn-outline-glass').forEach(anchor => {
+    document.querySelectorAll('.nav-links a, .btn-primary, .btn-secondary, .btn-outline-glass').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const hash = this.getAttribute('href');
             if (hash && hash.startsWith('#')) {
@@ -125,32 +134,71 @@ function initSmoothScroll() {
                 const target = document.querySelector(hash);
                 if (target) {
                     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // Cerrar menú móvil si está abierto
+                    const navLinks = document.querySelector('.nav-links');
+                    if (navLinks && navLinks.classList.contains('active')) {
+                        navLinks.classList.remove('active');
+                    }
                 }
             }
         });
     });
 }
 
-// Efecto vidrio dinámico en el header al hacer scroll
-function initHeaderGlassEffect() {
-    const headerGlass = document.querySelector('.glass-nav');
-    if (!headerGlass) return;
+// Mobile menu toggle
+function initMobileMenu() {
+    const toggle = document.querySelector('.menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    if (toggle && navLinks) {
+        toggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    }
+}
+
+// Header glass effect on scroll
+function initHeaderEffect() {
+    const header = document.querySelector('.glass-nav');
+    if (!header) return;
 
     window.addEventListener('scroll', () => {
         if (window.scrollY > 20) {
-            headerGlass.style.background = 'rgba(255, 255, 255, 0.85)';
-            headerGlass.style.backdropFilter = 'blur(16px)';
+            header.style.background = 'rgba(255, 255, 255, 0.95)';
+            header.style.backdropFilter = 'blur(24px)';
         } else {
-            headerGlass.style.background = 'rgba(255, 255, 255, 0.72)';
-            headerGlass.style.backdropFilter = 'blur(14px)';
+            header.style.background = 'rgba(255, 255, 255, 0.85)';
+            header.style.backdropFilter = 'blur(24px)';
         }
     });
 }
 
-// Inicialización cuando el DOM está listo
+// Intersection Observer para animaciones
+function initScrollAnimations() {
+    const cards = document.querySelectorAll('.glass-card, .service-card, .cert-card, .event-card');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    cards.forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = 'all 0.6s ease';
+        observer.observe(card);
+    });
+}
+
+// Inicialización
 document.addEventListener('DOMContentLoaded', () => {
     renderCertificaciones();
     renderEventos();
     initSmoothScroll();
-    initHeaderGlassEffect();
+    initMobileMenu();
+    initHeaderEffect();
+    initScrollAnimations();
 });
