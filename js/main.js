@@ -295,3 +295,12 @@ document.addEventListener('DOMContentLoaded', () => {
     initHeaderEffect();
     initScrollAnimations();
 });
+
+// Al final del archivo main.js, añadir:
+
+// Hacer que el botón Admin se muestre siempre (el login maneja la seguridad)
+// Esto es solo para que el enlace exista
+console.log('RUANA C.A. - Sitio oficial');
+
+// Si quieres ocultar el botón Admin cuando ya hay sesión (opcional)
+// Eso se manejaría con Firebase, pero no es crítico

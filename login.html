@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Admin | RUANA C.A.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .login-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: radial-gradient(circle at top left, rgba(230, 180, 34, 0.32), rgba(107, 46, 107, 0.16) 25%, rgba(10, 47, 108, 0.10) 48%, #F5F7FB 100%);
+        }
+        .login-card {
+            max-width: 450px;
+            width: 100%;
+            padding: 2.5rem;
+            text-align: center;
+        }
+        .login-logo {
+            margin-bottom: 2rem;
+        }
+        .login-logo h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #0A2F6C 0%, #6B2E6B 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .input-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #1A2C3E;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(0,0,0,0.1);
+            background: rgba(255,255,255,0.9);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: #E6B422;
+            box-shadow: 0 0 0 3px rgba(230,180,34,0.2);
+        }
+        .btn-login {
+            width: 100%;
+            background: linear-gradient(135deg, #0A2F6C 0%, #6B2E6B 100%);
+            color: white;
+            padding: 0.9rem;
+            border-radius: 3rem;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(10,47,108,0.3);
+        }
+        .error-message {
+            color: #dc2626;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            padding: 0.5rem;
+            background: rgba(220,38,38,0.1);
+            border-radius: 0.5rem;
+        }
+        .back-link {
+            margin-top: 1.5rem;
+            display: inline-block;
+            color: #4A5B6E;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            color: #0A2F6C;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="glass-card login-card">
+            <div class="login-logo">
+                <h1>RUANA <span style="background:none; color:#6B2E6B;">C.A.</span></h1>
+                <p style="color:#4A5B6E; margin-top:0.5rem;">Panel de Administración</p>
+            </div>
+            
+            <form id="loginForm">
+                <div class="input-group">
+                    <label><i class="fas fa-envelope"></i> Correo electrónico</label>
+                    <input type="email" id="email" required placeholder="admin@ruana.com">
+                </div>
+                <div class="input-group">
+                    <label><i class="fas fa-lock"></i> Contraseña</label>
+                    <input type="password" id="password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-login"><i class="fas fa-sign-in-alt"></i> Ingresar</button>
+                <div id="errorMsg" class="error-message" style="display:none;"></div>
+            </form>
+            <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Volver al sitio</a>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+        import { getAuth, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+        
+        // Tu configuración de Firebase (la misma que en index.html)
+        const firebaseConfig = {
+            apiKey: "TU_API_KEY",
+            authDomain: "TU_PROYECTO.firebaseapp.com",
+            projectId: "TU_PROYECTO",
+            storageBucket: "TU_PROYECTO.appspot.com",
+            messagingSenderId: "TU_SENDER_ID",
+            appId: "TU_APP_ID"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        
+        const form = document.getElementById('loginForm');
+        const errorDiv = document.getElementById('errorMsg');
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorDiv.style.display = 'none';
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                // Login exitoso - redirigir al dashboard
+                window.location.href = 'admin-dashboard.html';
+            } catch (error) {
+                let mensaje = '';
+                switch (error.code) {
+                    case 'auth/invalid-email':
+                        mensaje = 'Correo electrónico inválido';
+                        break;
+                    case 'auth/user-disabled':
+                        mensaje = 'Esta cuenta ha sido deshabilitada';
+                        break;
+                    case 'auth/user-not-found':
+                        mensaje = 'No existe una cuenta con este correo';
+                        break;
+                    case 'auth/wrong-password':
+                        mensaje = 'Contraseña incorrecta';
+                        break;
+                    default:
+                        mensaje = 'Error al iniciar sesión. Verifica tus credenciales.';
+                }
+                errorDiv.textContent = mensaje;
+                errorDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
