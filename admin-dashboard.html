@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin | RUANA C.A.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<header>
+    <div class="glass-nav" style="margin: 0 1rem; width: auto;">
+        <div class="logo">
+            <h1>RUANA <span>C.A.</span></h1>
+            <span class="tagline">Panel de Administración</span>
+        </div>
+        <div class="nav-links">
+            <span id="userEmail" style="color:#0A2F6C; font-weight:500;"></span>
+            <button id="logoutBtn" class="btn-outline-glass"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</button>
+        </div>
+    </div>
+</header>
+
+<main style="padding: 2rem 1rem;">
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <nav class="sidebar-nav">
+                <button class="tab-btn active" data-tab="participantes">
+                    <i class="fas fa-users"></i> Participantes
+                </button>
+                <button class="tab-btn" data-tab="cargar">
+                    <i class="fas fa-file-excel"></i> Cargar Excel
+                </button>
+                <button class="tab-btn" data-tab="certificados">
+                    <i class="fas fa-certificate"></i> Generar Certificados
+                </button>
+                <button class="tab-btn" data-tab="cursos">
+                    <i class="fas fa-graduation-cap"></i> Gestionar Cursos
+                </button>
+                <button class="tab-btn" data-tab="usuarios">
+                    <i class="fas fa-user-shield"></i> Usuarios (Dueño)
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="dashboard-main">
+            <!-- TAB: Participantes -->
+            <div id="tab-participantes" class="dashboard-tab active">
+                <h2><i class="fas fa-users"></i> Lista de Participantes</h2>
+                <div class="filters" style="margin: 1rem 0; display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <input type="text" id="filterNombre" placeholder="Filtrar por nombre..." class="filter-input">
+                    <select id="filterCurso" class="filter-select">
+                        <option value="">Todos los cursos</option>
+                    </select>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table" id="participantesTable">
+                        <thead>
+                            <tr><th>Nombre</th><th>Curso</th><th>Fecha</th><th>Email</th><th>Resultado</th><th>Certificado</th><th>Acciones</th></tr>
+                        </thead>
+                        <tbody id="participantesBody">
+                            <tr><td colspan="7">Cargando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB: Cargar Excel -->
+            <div id="tab-cargar" class="dashboard-tab">
+                <h2><i class="fas fa-file-excel"></i> Cargar Lista de Participantes</h2>
+                <div class="glass-card" style="padding: 2rem; margin-top: 1rem;">
+                    <p>Sube un archivo Excel (.xlsx o .csv) con las siguientes columnas:</p>
+                    <ul style="margin: 1rem 0 1rem 2rem;">
+                        <li><strong>nombre</strong> - Nombre completo del participante</li>
+                        <li><strong>curso_id</strong> - ID del curso (o nombre del curso)</li>
+                        <li><strong>fecha</strong> - Fecha del curso</li>
+                        <li><strong>email</strong> - Correo electrónico (opcional)</li>
+                        <li><strong>resultado</strong> - Aprobado / Reprobado</li>
+                    </ul>
+                    <input type="file" id="excelFile" accept=".xlsx,.xls,.csv" style="margin: 1rem 0;">
+                    <button id="uploadExcelBtn" class="btn-primary"><i class="fas fa-upload"></i> Subir y Procesar</button>
+                    <div id="uploadResult" style="margin-top: 1rem;"></div>
+                </div>
+                <div class="glass-card" style="padding: 2rem; margin-top: 1rem;">
+                    <h3>O agregar manualmente</h3>
+                    <form id="manualParticipantForm">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 1rem;">
+                            <input type="text" id="manNombre" placeholder="Nombre" required>
+                            <select id="manCursoId" required><option value="">Seleccionar curso</option></select>
+                            <input type="date" id="manFecha" required>
+                            <input type="email" id="manEmail" placeholder="Email">
+                            <select id="manResultado"><option value="Aprobado">Aprobado</option><option value="Reprobado">Reprobado</option></select>
+                        </div>
+                        <button type="submit" class="btn-primary" style="margin-top: 1rem;"><i class="fas fa-plus"></i> Agregar Participante</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- TAB: Generar Certificados -->
+            <div id="tab-certificados" class="dashboard-tab">
+                <h2><i class="fas fa-certificate"></i> Generar Certificados</h2>
+                <div class="glass-card" style="padding: 2rem; margin-top: 1rem;">
+                    <p>Selecciona los participantes y genera sus certificados con QR verificable.</p>
+                    <div style="margin: 1rem 0;">
+                        <label><input type="checkbox" id="selectAll"> Seleccionar todos</label>
+                    </div>
+                    <div id="certListContainer" style="max-height: 400px; overflow-y: auto; margin: 1rem 0;">
+                        <!-- Lista de checkboxes se carga dinámicamente -->
+                    </div>
+                    <button id="generateCertificatesBtn" class="btn-primary"><i class="fas fa-download"></i> Generar Certificados Seleccionados</button>
+                    <div id="generationResult" style="margin-top: 1rem;"></div>
+                </div>
+            </div>
+
+            <!-- TAB: Cursos -->
+            <div id="tab-cursos" class="dashboard-tab">
+                <h2><i class="fas fa-graduation-cap"></i> Gestionar Cursos</h2>
+                <div class="glass-card" style="padding: 2rem; margin-bottom: 2rem;">
+                    <h3>Agregar nuevo curso</h3>
+                    <form id="newCourseForm">
+                        <input type="text" id="courseNombre" placeholder="Nombre del curso" required style="width:100%; margin-bottom:1rem; padding:0.8rem;">
+                        <textarea id="courseDescripcion" placeholder="Descripción" rows="2" style="width:100%; margin-bottom:1rem; padding:0.8rem;"></textarea>
+                        <input type="number" id="courseHoras" placeholder="Horas" style="width:100%; margin-bottom:1rem; padding:0.8rem;">
+                        <button type="submit" class="btn-primary">Guardar Curso</button>
+                    </form>
+                </div>
+                <div class="glass-card" style="padding: 2rem;">
+                    <h3>Cursos existentes</h3>
+                    <div id="cursosList" style="margin-top:1rem;"></div>
+                </div>
+            </div>
+
+            <!-- TAB: Usuarios (solo dueño) -->
+            <div id="tab-usuarios" class="dashboard-tab">
+                <h2><i class="fas fa-user-shield"></i> Gestión de Usuarios</h2>
+                <div class="glass-card" style="padding: 2rem; margin-bottom: 2rem;">
+                    <h3>Invitar nuevo administrador</h3>
+                    <form id="newUserForm">
+                        <input type="email" id="newUserEmail" placeholder="Email del nuevo admin" required style="width:100%; margin-bottom:1rem; padding:0.8rem;">
+                        <input type="password" id="newUserPassword" placeholder="Contraseña temporal" required style="width:100%; margin-bottom:1rem; padding:0.8rem;">
+                        <select id="newUserRole" style="width:100%; margin-bottom:1rem; padding:0.8rem;">
+                            <option value="admin">Administrador</option>
+                            <option value="editor">Editor (solo carga)</option>
+                        </select>
+                        <button type="submit" class="btn-primary">Crear Usuario</button>
+                    </form>
+                </div>
+                <div class="glass-card" style="padding: 2rem;">
+                    <h3>Usuarios registrados</h3>
+                    <div id="usersList" style="margin-top:1rem;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Firebase SDKs -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+  import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, where, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+  
+  const firebaseConfig = {
+    apiKey: "AIzaSyAN-LqpfVuSZtGFB3GvFzSGBktwzWwBvts",
+    authDomain: "ruana-ca-79d4e.firebaseapp.com",
+    projectId: "ruana-ca-79d4e",
+    storageBucket: "ruana-ca-79d4e.firebasestorage.app",
+    messagingSenderId: "366000610226",
+    appId: "1:366000610226:web:6bc260622ade59bec162ab"
+  };
+  
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  
+  let currentUser = null;
+  let currentUserRole = 'editor'; // por defecto
+    
+    // Verificar autenticación
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+            window.location.href = 'login.html';
+            return;
+        }
+        currentUser = user;
+        document.getElementById('userEmail').textContent = user.email;
+        
+        // Obtener rol del usuario desde Firestore
+        const userDoc = await getDoc(doc(db, 'usuarios', user.uid));
+        if (userDoc.exists()) {
+            currentUserRole = userDoc.data().rol;
+        }
+        
+        // Ocultar pestaña de usuarios si no es dueño
+        if (currentUserRole !== 'owner') {
+            document.querySelector('[data-tab="usuarios"]').style.display = 'none';
+        }
+        
+        // Cargar datos iniciales
+        loadParticipantes();
+        loadCursos();
+        if (currentUserRole === 'owner') loadUsers();
+        populateCourseSelects();
+    });
+    
+    // Cerrar sesión
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+        await signOut(auth);
+        window.location.href = 'login.html';
+    });
+    
+    // Navegación por tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const tabId = btn.getAttribute('data-tab');
+            document.querySelectorAll('.dashboard-tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+            
+            // Recargar datos según la tab
+            if (tabId === 'participantes') loadParticipantes();
+            if (tabId === 'certificados') loadCertList();
+            if (tabId === 'cursos') loadCursos();
+        });
+    });
+    
+    // ========== FUNCIONES ==========
+    
+    async function loadParticipantes() {
+        const tbody = document.getElementById('participantesBody');
+        tbody.innerHTML = '<tr><td colspan="7">Cargando...</td></tr>';
+        
+        try {
+            const snapshot = await getDocs(collection(db, 'participantes'));
+            if (snapshot.empty) {
+                tbody.innerHTML = '<tr><td colspan="7">No hay participantes registrados</td></tr>';
+                return;
+            }
+            
+            let html = '';
+            snapshot.forEach(docSnap => {
+                const p = docSnap.data();
+                const certId = p.certificadoId || '';
+                html += `
+                    <tr>
+                        <td>${escapeHtml(p.nombre)}</td>
+                        <td>${escapeHtml(p.cursoNombre || p.curso_id)}</td>
+                        <td>${escapeHtml(p.fecha)}</td>
+                        <td>${escapeHtml(p.email || '')}</td>
+                        <td><span class="badge-${p.resultado === 'Aprobado' ? 'success' : 'danger'}">${escapeHtml(p.resultado)}</span></td>
+                        <td>${certId ? `<a href="verificar.html?id=${certId}" target="_blank">Ver QR</a>` : 'No generado'}</td>
+                        <td>
+                            <button class="btn-icon edit-participante" data-id="${docSnap.id}" data-nombre="${escapeHtml(p.nombre)}" data-curso="${escapeHtml(p.cursoNombre)}" data-fecha="${p.fecha}" data-email="${escapeHtml(p.email || '')}" data-resultado="${p.resultado}"><i class="fas fa-edit"></i></button>
+                            <button class="btn-icon delete-participante" data-id="${docSnap.id}"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+            
+            // Eventos editar/eliminar
+            document.querySelectorAll('.edit-participante').forEach(btn => {
+                btn.addEventListener('click', () => editParticipante(btn.dataset));
+            });
+            document.querySelectorAll('.delete-participante').forEach(btn => {
+                btn.addEventListener('click', () => deleteParticipante(btn.dataset.id));
+            });
+        } catch (error) {
+            console.error(error);
+            tbody.innerHTML = '<tr><td colspan="7">Error al cargar</td></tr>';
+        }
+    }
+    
+    async function editParticipante(data) {
+        const nuevoNombre = prompt('Nuevo nombre:', data.nombre);
+        if (!nuevoNombre) return;
+        const nuevoResultado = prompt('Resultado (Aprobado/Reprobado):', data.resultado);
+        if (!nuevoResultado) return;
+        
+        await updateDoc(doc(db, 'participantes', data.id), {
+            nombre: nuevoNombre,
+            resultado: nuevoResultado
+        });
+        loadParticipantes();
+    }
+    
+    async function deleteParticipante(id) {
+        if (confirm('¿Eliminar este participante?')) {
+            await deleteDoc(doc(db, 'participantes', id));
+            loadParticipantes();
+        }
+    }
+    
+    async function loadCursos() {
+        const container = document.getElementById('cursosList');
+        if (!container) return;
+        
+        try {
+            const snapshot = await getDocs(collection(db, 'cursos'));
+            if (snapshot.empty) {
+                container.innerHTML = '<p>No hay cursos registrados</p>';
+                return;
+            }
+            
+            let html = '<ul style="list-style:none;">';
+            snapshot.forEach(docSnap => {
+                const c = docSnap.data();
+                html += `
+                    <li style="padding:0.5rem; border-bottom:1px solid #eee;">
+                        <strong>${escapeHtml(c.nombre)}</strong> - ${c.horas || 0} horas
+                        <button class="btn-icon delete-curso" data-id="${docSnap.id}" style="float:right; color:#dc2626;"><i class="fas fa-trash"></i></button>
+                        <br><small>${escapeHtml(c.descripcion || '')}</small>
+                    </li>
+                `;
+            });
+            html += '</ul>';
+            container.innerHTML = html;
+            
+            document.querySelectorAll('.delete-curso').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    if (confirm('¿Eliminar este curso?')) {
+                        await deleteDoc(doc(db, 'cursos', btn.dataset.id));
+                        loadCursos();
+                        populateCourseSelects();
+                    }
+                });
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    
+    async function populateCourseSelects() {
+        const selects = ['manCursoId', 'filterCurso'];
+        selects.forEach(id => {
+            const sel = document.getElementById(id);
+            if (sel) sel.innerHTML = '<option value="">Seleccionar curso</option>';
+        });
+        
+        try {
+            const snapshot = await getDocs(collection(db, 'cursos'));
+            snapshot.forEach(docSnap => {
+                const c = docSnap.data();
+                selects.forEach(id => {
+                    const sel = document.getElementById(id);
+                    if (sel) sel.innerHTML += `<option value="${docSnap.id}">${escapeHtml(c.nombre)}</option>`;
+                });
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    
+    // Subir Excel (simplificado - necesitarás xlsx library)
+    document.getElementById('uploadExcelBtn')?.addEventListener('click', async () => {
+        const fileInput = document.getElementById('excelFile');
+        const resultDiv = document.getElementById('uploadResult');
+        
+        if (!fileInput.files[0]) {
+            resultDiv.innerHTML = '<span style="color:#dc2626;">Selecciona un archivo</span>';
+            return;
+        }
+        
+        resultDiv.innerHTML = 'Procesando...';
+        
+        // Aquí iría la lógica de lectura de Excel
+        // Por ahora, ejemplo con CSV simple
+        const file = fileInput.files[0];
+        const text = await file.text();
+        const rows = text.split('\n');
+        const headers = rows[0].split(',');
+        
+        let added = 0;
+        for (let i = 1; i < rows.length; i++) {
+            const cols = rows[i].split(',');
+            if (cols.length < 3) continue;
+            
+            await addDoc(collection(db, 'participantes'), {
+                nombre: cols[0],
+                cursoNombre: cols[1],
+                fecha: cols[2],
+                email: cols[3] || '',
+                resultado: cols[4] || 'Aprobado',
+                creadoPor: currentUser.email,
+                timestamp: new Date().toISOString()
+            });
+            added++;
+        }
+        
+        resultDiv.innerHTML = `<span style="color:#10b981;">✅ ${added} participantes agregados</span>`;
+        loadParticipantes();
+    });
+    
+    // Agregar manual
+    document.getElementById('manualParticipantForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const cursoId = document.getElementById('manCursoId').value;
+        let cursoNombre = '';
+        const cursoDoc = await getDoc(doc(db, 'cursos', cursoId));
+        if (cursoDoc.exists()) cursoNombre = cursoDoc.data().nombre;
+        
+        await addDoc(collection(db, 'participantes'), {
+            nombre: document.getElementById('manNombre').value,
+            curso_id: cursoId,
+            cursoNombre: cursoNombre,
+            fecha: document.getElementById('manFecha').value,
+            email: document.getElementById('manEmail').value,
+            resultado: document.getElementById('manResultado').value,
+            creadoPor: currentUser.email,
+            timestamp: new Date().toISOString()
+        });
+        alert('Participante agregado');
+        document.getElementById('manualParticipantForm').reset();
+        loadParticipantes();
+    });
+    
+    // Nuevo curso
+    document.getElementById('newCourseForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await addDoc(collection(db, 'cursos'), {
+            nombre: document.getElementById('courseNombre').value,
+            descripcion: document.getElementById('courseDescripcion').value,
+            horas: parseInt(document.getElementById('courseHoras').value) || 0
+        });
+        alert('Curso agregado');
+        document.getElementById('newCourseForm').reset();
+        loadCursos();
+        populateCourseSelects();
+    });
+    
+    // Cargar lista para certificados
+    async function loadCertList() {
+        const container = document.getElementById('certListContainer');
+        if (!container) return;
+        
+        try {
+            const snapshot = await getDocs(collection(db, 'participantes'));
+            if (snapshot.empty) {
+                container.innerHTML = '<p>No hay participantes</p>';
+                return;
+            }
+            
+            let html = '';
+            snapshot.forEach(docSnap => {
+                const p = docSnap.data();
+                html += `
+                    <label style="display:block; margin:0.5rem 0;">
+                        <input type="checkbox" class="cert-checkbox" value="${docSnap.id}" data-nombre="${escapeHtml(p.nombre)}" data-curso="${escapeHtml(p.cursoNombre)}" data-fecha="${p.fecha}">
+                        <strong>${escapeHtml(p.nombre)}</strong> - ${escapeHtml(p.cursoNombre)} (${p.fecha})
+                    </label>
+                `;
+            });
+            container.innerHTML = html;
+            
+            document.getElementById('selectAll')?.addEventListener('change', (e) => {
+                document.querySelectorAll('.cert-checkbox').forEach(cb => cb.checked = e.target.checked);
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    
+    // Generar certificados (simula creación de ID único)
+    document.getElementById('generateCertificatesBtn')?.addEventListener('click', async () => {
+        const selected = document.querySelectorAll('.cert-checkbox:checked');
+        const resultDiv = document.getElementById('generationResult');
+        
+        if (selected.length === 0) {
+            resultDiv.innerHTML = '<span style="color:#dc2626;">Selecciona al menos un participante</span>';
+            return;
+        }
+        
+        resultDiv.innerHTML = `Generando ${selected.length} certificados...`;
+        
+        for (const cb of selected) {
+            const participanteId = cb.value;
+            const nombre = cb.dataset.nombre;
+            const curso = cb.dataset.curso;
+            const fecha = cb.dataset.fecha;
+            
+            // Generar ID único para el certificado
+            const certId = `RUA-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`;
+            
+            // Guardar certificado en Firestore
+            await addDoc(collection(db, 'certificados'), {
+                participanteId: participanteId,
+                nombre: nombre,
+                curso: curso,
+                fecha: fecha,
+                codigo: certId,
+                emitidoPor: currentUser.email,
+                emitidoEn: new Date().toISOString(),
+                publico: true
+            });
+            
+            // Actualizar participante con el ID del certificado
+            await updateDoc(doc(db, 'participantes', participanteId), {
+                certificadoId: certId,
+                certificadoEmitido: true
+            });
+        }
+        
+        resultDiv.innerHTML = `<span style="color:#10b981;">✅ ${selected.length} certificados generados. Los participantes ahora tienen un código QR verificable.</span>`;
+        loadCertList();
+        loadParticipantes();
+    });
+    
+    // Gestión de usuarios (solo dueño)
+    async function loadUsers() {
+        const container = document.getElementById('usersList');
+        if (!container) return;
+        
+        try {
+            const snapshot = await getDocs(collection(db, 'usuarios'));
+            let html = '<ul style="list-style:none;">';
+            snapshot.forEach(docSnap => {
+                const u = docSnap.data();
+                html += `
+                    <li style="padding:0.5rem; border-bottom:1px solid #eee;">
+                        <strong>${escapeHtml(u.email)}</strong> - Rol: ${u.rol}
+                        <button class="btn-icon delete-user" data-id="${docSnap.id}" style="float:right; color:#dc2626;"><i class="fas fa-trash"></i></button>
+                    </li>
+                `;
+            });
+            html += '</ul>';
+            container.innerHTML = html;
+            
+            document.querySelectorAll('.delete-user').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    if (confirm('¿Eliminar este usuario?')) {
+                        await deleteDoc(doc(db, 'usuarios', btn.dataset.id));
+                        loadUsers();
+                    }
+                });
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    
+    document.getElementById('newUserForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        // Nota: Para crear usuarios en Firebase Auth necesitas admin SDK
+        // Por simplicidad, solo guardamos en Firestore
+        alert('Funcionalidad: Crear usuario en Auth y Firestore');
+    });
+    
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+</script>
+</body>
+</html>

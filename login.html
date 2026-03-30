@@ -120,58 +120,53 @@
 
     <!-- Firebase SDKs -->
     <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-        import { getAuth, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
-        
-        // Tu configuración de Firebase (la misma que en index.html)
-        const firebaseConfig = {
-            apiKey: "TU_API_KEY",
-            authDomain: "TU_PROYECTO.firebaseapp.com",
-            projectId: "TU_PROYECTO",
-            storageBucket: "TU_PROYECTO.appspot.com",
-            messagingSenderId: "TU_SENDER_ID",
-            appId: "TU_APP_ID"
-        };
-        
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        
-        const form = document.getElementById('loginForm');
-        const errorDiv = document.getElementById('errorMsg');
-        
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            errorDiv.style.display = 'none';
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            try {
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                // Login exitoso - redirigir al dashboard
-                window.location.href = 'admin-dashboard.html';
-            } catch (error) {
-                let mensaje = '';
-                switch (error.code) {
-                    case 'auth/invalid-email':
-                        mensaje = 'Correo electrónico inválido';
-                        break;
-                    case 'auth/user-disabled':
-                        mensaje = 'Esta cuenta ha sido deshabilitada';
-                        break;
-                    case 'auth/user-not-found':
-                        mensaje = 'No existe una cuenta con este correo';
-                        break;
-                    case 'auth/wrong-password':
-                        mensaje = 'Contraseña incorrecta';
-                        break;
-                    default:
-                        mensaje = 'Error al iniciar sesión. Verifica tus credenciales.';
-                }
-                errorDiv.textContent = mensaje;
-                errorDiv.style.display = 'block';
-            }
-        });
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+      import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+      const firebaseConfig = {
+        apiKey: "AIzaSyAN-LqpfVuSZtGFB3GvFzSGBktwzWwBvts",
+        authDomain: "ruana-ca-79d4e.firebaseapp.com",
+        projectId: "ruana-ca-79d4e",
+        storageBucket: "ruana-ca-79d4e.firebasestorage.app",
+        messagingSenderId: "366000610226",
+        appId: "1:366000610226:web:6bc260622ade59bec162ab"
+      };
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const form = document.getElementById('loginForm');
+      const errorDiv = document.getElementById('errorMsg');
+      form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          errorDiv.style.display = 'none';
+          
+          const email = document.getElementById('email').value;
+          const password = document.getElementById('password').value;
+          
+          try {
+              const userCredential = await signInWithEmailAndPassword(auth, email, password);
+              // Login exitoso - redirigir al dashboard
+              window.location.href = 'admin-dashboard.html';
+          } catch (error) {
+              let mensaje = '';
+              switch (error.code) {
+                  case 'auth/invalid-email':
+                      mensaje = 'Correo electrónico inválido';
+                      break;
+                  case 'auth/user-disabled':
+                      mensaje = 'Esta cuenta ha sido deshabilitada';
+                      break;
+                  case 'auth/user-not-found':
+                      mensaje = 'No existe una cuenta con este correo';
+                      break;
+                  case 'auth/wrong-password':
+                      mensaje = 'Contraseña incorrecta';
+                      break;
+                  default:
+                      mensaje = 'Error al iniciar sesión. Verifica tus credenciales.';
+              }
+              errorDiv.textContent = mensaje;
+              errorDiv.style.display = 'block';
+          }
+      });
     </script>
 </body>
 </html>

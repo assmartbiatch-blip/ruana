@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificar Certificado | RUANA C.A.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .verify-wrapper {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .verify-card {
+            max-width: 600px;
+            width: 100%;
+            padding: 2.5rem;
+            text-align: center;
+        }
+        .search-box {
+            display: flex;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .search-box input {
+            flex: 1;
+            padding: 0.9rem 1.2rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(0,0,0,0.1);
+            font-size: 1rem;
+        }
+        .result-box {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            text-align: left;
+        }
+        .result-valid {
+            background: rgba(16,185,129,0.1);
+            border-left: 4px solid #10b981;
+        }
+        .result-invalid {
+            background: rgba(220,38,38,0.1);
+            border-left: 4px solid #dc2626;
+        }
+        .cert-data {
+            margin: 1rem 0;
+        }
+        .cert-data p {
+            margin: 0.5rem 0;
+        }
+        .qr-code {
+            text-align: center;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="glass-nav" style="margin: 0 1rem; width: auto;">
+            <div class="logo">
+                <h1>RUANA <span>C.A.</span></h1>
+                <span class="tagline">Verificación de Certificados</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="verify-wrapper">
+        <div class="glass-card verify-card">
+            <i class="fas fa-shield-alt" style="font-size: 3rem; color: #0A2F6C;"></i>
+            <h2 style="margin-top: 1rem;">Verificar Autenticidad</h2>
+            <p>Ingresa el código del certificado o escanea el QR</p>
+            
+            <div class="search-box">
+                <input type="text" id="certCode" placeholder="Ej: RUA-1700000000-ABC123">
+                <button id="verifyBtn" class="btn-primary">Verificar</button>
+            </div>
+            
+            <div id="resultContainer"></div>
+        </div>
+    </div>
+
+    <footer style="background: linear-gradient(135deg, #0A2F6C, #6B2E6B); color: white; text-align: center; padding: 2rem; margin-top: 2rem;">
+        <p>© 2025 RUANA C.A. — Certificados verificables digitalmente</p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js';
+        import { getFirestore, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js';
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyAN-LqpfVuSZtGFB3GvFzSGBktwzWwBvts",
+            authDomain: "ruana-ca-79d4e.firebaseapp.com",
+            projectId: "ruana-ca-79d4e",
+            storageBucket: "ruana-ca-79d4e.firebasestorage.app",
+            messagingSenderId: "366000610226",
+            appId: "1:366000610226:web:6bc260622ade59bec162ab"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        // Leer código de la URL (si viene por QR)
+        const urlParams = new URLSearchParams(window.location.search);
+        const codigoFromUrl = urlParams.get('id');
+        if (codigoFromUrl) {
+            document.getElementById('certCode').value = codigoFromUrl;
+            verificar(codigoFromUrl);
+        }
+        
+        document.getElementById('verifyBtn').addEventListener('click', () => {
+            const codigo = document.getElementById('certCode').value.trim();
+            if (codigo) verificar(codigo);
+        });
+        
+        async function verificar(codigo) {
+            const container = document.getElementById('resultContainer');
+            container.innerHTML = '<p>Buscando...</p>';
+            
+            try {
+                const q = query(collection(db, 'certificados'), where('codigo', '==', codigo));
+                const snapshot = await getDocs(q);
+                
+                if (snapshot.empty) {
+                    container.innerHTML = `
+                        <div class="result-box result-invalid">
+                            <i class="fas fa-times-circle" style="color:#dc2626; font-size:2rem;"></i>
+                            <h3>Certificado NO VÁLIDO</h3>
+                            <p>El código ingresado no corresponde a ningún certificado emitido por RUANA C.A.</p>
+                            <p><small>Verifica que hayas copiado el código correctamente.</small></p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                const cert = snapshot.docs[0].data();
+                container.innerHTML = `
+                    <div class="result-box result-valid">
+                        <i class="fas fa-check-circle" style="color:#10b981; font-size:2rem;"></i>
+                        <h3>✅ Certificado VÁLIDO</h3>
+                        <div class="cert-data">
+                            <p><strong>Emitido a:</strong> ${escapeHtml(cert.nombre)}</p>
+                            <p><strong>Curso:</strong> ${escapeHtml(cert.curso)}</p>
+                            <p><strong>Fecha:</strong> ${escapeHtml(cert.fecha)}</p>
+                            <p><strong>Código:</strong> ${escapeHtml(cert.codigo)}</p>
+                            <p><strong>Emitido por:</strong> ${escapeHtml(cert.emitidoPor || 'RUANA C.A.')}</p>
+                            <p><strong>Fecha de emisión:</strong> ${new Date(cert.emitidoEn).toLocaleDateString()}</p>
+                        </div>
+                        <div class="qr-code">
+                            <p><small>Este certificado puede ser verificado en cualquier momento en ruana.com/verificar</small></p>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                console.error(error);
+                container.innerHTML = '<div class="result-box result-invalid">Error al verificar. Intenta nuevamente.</div>';
+            }
+        }
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+    </script>
+</body>
+</html>
